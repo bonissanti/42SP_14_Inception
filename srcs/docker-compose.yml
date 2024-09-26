@@ -1,0 +1,13 @@
+version '3'
+services:
+  nginx:
+    image: ngnix:alpine
+    build:
+
+    ports:
+      - "8080:80"
+
+    volumes:
+    - ./requirements/nginx/nginx.conf
+      
+
