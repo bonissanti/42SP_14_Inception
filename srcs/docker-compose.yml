@@ -3,39 +3,45 @@ services:
     image: nginx:alpine
     ports:
       - "1027:80"
-
-    volumes:
-      - /home/bruno/Documents/42SP/13.Inception/Inception-git/srcs/requirements/nginx/conf/nginx.conf 
     depends_on:
-      - php
-    networks:
-      - backend
-
-  db:
-    image: mariadb:latest
+      - wordpress
     volumes:
-      - db_data:/var/lib/mysql
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=somewordpress
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=wordpress
-      - MYSQL_PASSWORD=wordpress
-    expose:
-      - 3306
-    networks:
-      - backend
+      - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf 
+      - wordpress:/var/www/wordpress
+    # networks:
+    #   - backend
 
-  php:
-    image: php:fpm-alpine
+  wordpress:
+    image:  wordpress:alpine
+    depends_on:
+      - mariadb
     volumes:
-      -  /home/bruno/Documents/42SP/13.Inception/Inception-git/srcs/requirements/php/index.php
-      # - /var/www/html
-    networks:
-      - backend
+      - wordpress:/var/www/wordpress
+
+  # php:
+  #   image: php:fpm-alpine
+  #   volumes:
+  #     -  ./requirements/php/index.php:/var/www/html/index.php
+  #   # networks:
+  #   #   - backend
 
 volumes:
   db_data:
 
 networks:
   backend:
+
+  # db:
+  #   image: mariadb:latest
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+  #   restart: always
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=somewordpress
+  #     - MYSQL_DATABASE=wordpress
+  #     - MYSQL_USER=wordpress
+  #     - MYSQL_PASSWORD=wordpress
+  #   expose:
+  #     - 3306
+  #   networks:
+  #     - backend
