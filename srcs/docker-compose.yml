@@ -1,47 +1,59 @@
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "1027:80"
+  #TODO: Ajustar o script do mariadb para usar as variaveis de ambiente
+  mariadb:
+    container_name: mariadb-run
+    build:
+      context: requirements/mariadb
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - inception
+    expose:
+      - 3306
+
+#TODO: Ajustar o script do wordpress para usar as variaveis de ambiente
+  wordpress:
+    container_name: wp-run
+    build:
+      context: requirements/wordpress
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - wordpress:/var/www/html/wordpress
     depends_on:
-      - wordpress
+      - mariadb-run
+    networks:
+      - inception
+    expose:
+      - 9000
+
+  nginx:
+    container_name: nginx-run
+    build:
+      context: requirements/nginx
+    env_file:
+      - .env
+    restart: always
     volumes:
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf 
-      - wordpress:/var/www/wordpress
-    # networks:
-    #   - backend
-
-  wordpress:
-    image:  wordpress:alpine
+      - wordpress:/var/www/html/wordpress
     depends_on:
       - mariadb
-    volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress
+    networks:
+      - inception
+    ports:
+      - 443:443
 
-  # php:
-  #   image: php:fpm-alpine
-  #   volumes:
-  #     -  ./requirements/php/index.php:/var/www/html/index.php
-  #   # networks:
-  #   #   - backend
 
 volumes:
-  db_data:
+  mariadb_data:
+  wordpress:
+  # o que colocar aqui
 
 networks:
-  backend:
-
-  # db:
-  #   image: mariadb:latest
-  #   volumes:
-  #     - db_data:/var/lib/mysql
-  #   restart: always
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=somewordpress
-  #     - MYSQL_DATABASE=wordpress
-  #     - MYSQL_USER=wordpress
-  #     - MYSQL_PASSWORD=wordpress
-  #   expose:
-  #     - 3306
-  #   networks:
-  #     - backend
+  inception:
