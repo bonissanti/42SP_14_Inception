@@ -1,4 +1,4 @@
-FROM debian:oldstable
+FROM debian:bullseye
 
 RUN apt update && apt-get install -y mariadb-server mariadb-client && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /var/run/mysqld && chown mysql:mysql /var/run/mysqld

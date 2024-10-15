@@ -4,7 +4,7 @@ service mariadb start
 
 # creating database
 mariadb -u root -e \
-"CREATE DATABASE IF NOT EXISTS wp_database; \
-CREATE USER 'admin_user'@'%' IDENTIFIED BY 'password'; \
-GRANT ALL PRIVILEGES ON wp_database.* TO 'admin_user'@'%'; \
+"CREATE DATABASE IF NOT EXISTS $WORDPRESS_DATABASE; \
+CREATE USER '$WORDPRESS_DB_USER'@'%' IDENTIFIED BY '$WORDPRESS_DB_PASSWORD'; \
+GRANT ALL PRIVILEGES ON wp_database.* TO '$WORDPRESS_DB_USER'@'%'; \
 FLUSH PRIVILEGES;"

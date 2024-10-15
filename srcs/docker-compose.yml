@@ -1,5 +1,4 @@
 services:
-  #TODO: Ajustar o script do mariadb para usar as variaveis de ambiente
   mariadb:
     container_name: mariadb-run
     build:
@@ -14,7 +13,6 @@ services:
     expose:
       - 3306
 
-#TODO: Ajustar o script do wordpress para usar as variaveis de ambiente
   wordpress:
     container_name: wp-run
     build:

@@ -1,7 +1,7 @@
 FROM debian:oldstable
 
-RUN apt-get update
-RUN apt-get install -y php \
+RUN apt-get update && \
+	apt-get install -y php \
 				wget \
 				php-fpm \ 
 				php-bcmath \
@@ -16,5 +16,6 @@ RUN apt-get install -y php \
 
 COPY ./tools/install-wp.sh /
 RUN chmod a+rwx  /install-wp.sh && bash /install-wp.sh
+COPY ./conf/wp-config.php /var/www/html/wordpress/wp-config.php
 
 CMD ["apache2ctl", "-D", "FOREGROUND"]
