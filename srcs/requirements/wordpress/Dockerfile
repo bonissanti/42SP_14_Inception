@@ -1,21 +1,62 @@
+# FROM debian:oldstable
+
+# ARG WORDPRESS_DATABASE
+# ARG WORDPRESS_USER
+# ARG WORDPRESS_PASSWORD
+
+# WORKDIR /var/www/html/
+
+# RUN apt update -y && \
+#     apt upgrade -y && \
+#     apt install php7.4 php-fpm php-mysql mariadb-client wget -y
+
+# RUN wget -O /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+# 	&& chmod +x /usr/local/bin/wp \
+# 	&& wp core download --allow-root --path=/var/www/html
+
+# # Create the directory where php-fpm will store the pid file
+# RUN mkdir /run/php
+
+# RUN chown -R www-data:www-data /var/www/html \
+# 	&& chmod 755 /var/www/html
+
+# COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+
+# COPY tool/script.sh /tmp/wp_setup.sh
+
+# RUN chmod +x /tmp/wp_setup.sh
+
+# ENTRYPOINT ["/tmp/wp_setup.sh"]
+
 FROM debian:oldstable
 
+WORKDIR /var/www/html/
+
 RUN apt-get update && \
-	apt-get install -y php \
-				wget \
-				php-fpm \ 
-				php-bcmath \
-				php-curl \
-				php-imagick \
-				php-intl \
-				php-json \
-				php-mbstring \
-				php-mysql \
-				php-xml \
-				apache2 && rm -rf /var/lib/apt/lists/*
+    apt-get install -y php \
+                       wget \
+                       php-fpm \
+                       php-bcmath \
+                       php-curl \
+                       php-imagick \
+                       php-intl \
+                       php-json \
+                       php-mbstring \
+                       php-mysql \
+                       php-xml \
+                       && rm -rf /var/lib/apt/lists/*
 
-COPY ./tools/install-wp.sh /
-RUN chmod a+rwx  /install-wp.sh && bash /install-wp.sh
-COPY ./conf/wp-config.php /var/www/html/wordpress/wp-config.php
+COPY ./tools/run.sh /
 
-CMD ["apache2ctl", "-D", "FOREGROUND"]
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+RUN chmod +x /run.sh \
+    && mkdir -p /run/php
+
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod 755 /var/www/html
+
+ENTRYPOINT ["/run.sh"]
+
+
+# CMD ["apache2ctl", "-D", "FOREGROUND"]
+# CMD ["php-fpm7.4", "-F"]

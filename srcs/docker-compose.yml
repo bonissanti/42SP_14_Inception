@@ -1,57 +1,66 @@
 services:
   mariadb:
-    container_name: mariadb-run
+    container_name: mariadb
     build:
       context: requirements/mariadb
+      args:
+        - WORDPRESS_DATABASE=${WORDPRESS_DATABASE}
+        - WORDPRESS_USER=${WORDPRESS_USER}
+        - WORDPRESS_PASSWORD=${WORDPRESS_PASSWORD}
+    environment:
+      - WORDPRESS_DATABASE
+      - WORDPRESS_USER
+      - WORDPRESS_PASSWORD
+    restart: on-failure
+    volumes:
+      - mariadb_volume:/var/lib/mysql
     env_file:
       - .env
-    restart: always
-    volumes:
-      - mariadb_data:/var/lib/mysql
     networks:
       - inception
     expose:
       - 3306
 
   wordpress:
-    container_name: wp-run
+    container_name: wordpress
     build:
       context: requirements/wordpress
+      args:
+        - WORDPRESS_DATABASE=${WORDPRESS_DATABASE}
+        - WORDPRESS_USER=${WORDPRESS_USER}
+        - WORDPRESS_PASSWORD=${WORDPRESS_PASSWORD}
+    restart: on-failure
     env_file:
       - .env
-    restart: always
     volumes:
-      - wordpress:/var/www/html/wordpress
+      - wordpress_volume:/var/www/html
     depends_on:
-      - mariadb-run
+      - mariadb
     networks:
       - inception
     expose:
       - 9000
 
   nginx:
-    container_name: nginx-run
+    container_name: nginx
     build:
       context: requirements/nginx
-    env_file:
-      - .env
-    restart: always
-    volumes:
-      - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf 
-      - wordpress:/var/www/html/wordpress
-    depends_on:
-      - mariadb
-      - wordpress
-    networks:
-      - inception
+    restart: on-failure
     ports:
       - 443:443
-
-
-volumes:
-  mariadb_data:
-  wordpress:
-  # o que colocar aqui
+    depends_on:
+      - wordpress
+      - mariadb
+    networks:
+      - inception
+    volumes:
+      - wordpress_volume:/var/www/html
 
 networks:
   inception:
+
+volumes:
+  mariadb_volume:
+  wordpress_volume:
+
+
