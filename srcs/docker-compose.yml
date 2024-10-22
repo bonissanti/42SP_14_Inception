@@ -7,10 +7,6 @@ services:
         - WORDPRESS_DATABASE=${WORDPRESS_DATABASE}
         - WORDPRESS_USER=${WORDPRESS_USER}
         - WORDPRESS_PASSWORD=${WORDPRESS_PASSWORD}
-    environment:
-      - WORDPRESS_DATABASE
-      - WORDPRESS_USER
-      - WORDPRESS_PASSWORD
     restart: on-failure
     volumes:
       - mariadb_volume:/var/lib/mysql
@@ -61,6 +57,19 @@ networks:
 
 volumes:
   mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/brunrodr/data/mariadb
+
   wordpress_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/brunrodr/data/wordpress
+
+
 
 
