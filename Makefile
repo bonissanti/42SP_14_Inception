@@ -61,3 +61,6 @@ fclean:
 	bash clean_docker.sh
 	sudo cp /home/brunrodr/backup/hosts-bkp /etc/hosts
 	@echo "$(BLUE)Docker files deleted and hostname restored to localhost$(RESET)"
+	sudo rm -rf /home/brunrodr/data/wordpress/*
+	sudo rm -rf /home/brunrodr/data/mariadb/*
+	@echo "$(BLUE)Docker files deleted and hostname restored to localhost$(RESET)"
