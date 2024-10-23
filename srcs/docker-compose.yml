@@ -7,7 +7,7 @@ services:
         - WORDPRESS_DATABASE=${WORDPRESS_DATABASE}
         - WORDPRESS_USER=${WORDPRESS_USER}
         - WORDPRESS_PASSWORD=${WORDPRESS_PASSWORD}
-    restart: on-failure
+    restart: always
     volumes:
       - mariadb_volume:/var/lib/mysql
     env_file:
@@ -25,7 +25,7 @@ services:
         - WORDPRESS_DATABASE=${WORDPRESS_DATABASE}
         - WORDPRESS_USER=${WORDPRESS_USER}
         - WORDPRESS_PASSWORD=${WORDPRESS_PASSWORD}
-    restart: on-failure
+    restart: always
     env_file:
       - .env
     volumes:
@@ -41,7 +41,7 @@ services:
     container_name: nginx
     build:
       context: requirements/nginx
-    restart: on-failure
+    restart: always
     ports:
       - 443:443
     depends_on:
