@@ -3,7 +3,7 @@
 YELLOW="\e[0;33m"
 RESET="\e[0;0m"
 
-# carefull, this script will delete all containers in your machine
+# Careful, this script will delete all containers on your machine
 
 echo -e "${YELLOW}Stopping all containers${RESET}"
 docker stop $(docker ps -a -q) 2> /dev/null

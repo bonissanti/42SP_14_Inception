@@ -1,11 +1,13 @@
+include ./srcs/.env
+export $(shell sed 's/=.*//' ./srcs/.env)
+
 RESET				=	\e[0;0m
 GREEN				=	\e[0;32m
 YELLOW				=	\e[0;33m
 BLUE				=	\e[0;34m
 PURPLE				=	\e[0;35m
 
-LOGIN				=	brunrodr
-HOSTNAME			=	127.0.0.1       $(LOGIN).42.fr
+HOSTNAME			=	127.0.0.1       $(DOMAIN_NAME)
 BACKUP_DIR			=	/home/$(LOGIN)/backup
 VOLUME_DIR			=	/home/$(LOGIN)/data
 DOCKER_COMPOSE_FILE	=	./srcs/docker-compose.yml
